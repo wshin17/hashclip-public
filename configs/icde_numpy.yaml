@@ -1,0 +1,6 @@
+# D-008: same validation-selected search implementation, torch-free adapter.
+binary_use_heap: false
+rerank_block: 256
+rerank_mode: indexed
+compare_legacy_binary: false
+adapter_backend: numpy

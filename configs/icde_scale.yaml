@@ -1,0 +1,23 @@
+# Fixed original queries; real training items added to the gallery only.
+bits: 128
+seeds: [0, 1, 42]
+batch_sizes: [1, 32]
+candidate_budgets: [100, 500, 1000, 2000]
+candidate_budget_fractions: [0.1, 0.25, 0.5, 0.75, 1.0]
+ivf_nlist: [32, 128, 512]
+ivf_nprobe: [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
+ivf_seed: 42
+quality_targets: [0.95, 0.99]
+threads: 1
+cpus: [0, 2, 4, 6, 8, 10, 12, 14]
+blas_core: Haswell
+warmup: 5
+repeats: 3
+timing_queries: 256
+cache_quality_scores: true
+quality_audit_queries: 64
+expected_images: {val: 1014, test: 1000}
+distractor_counts: [9000, 29000]
+candidate_budgets_extra_by_distractors: {29000: [5000, 10000]}
+distractor_seed: 42
+expected_train_images: 29000

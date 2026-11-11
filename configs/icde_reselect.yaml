@@ -1,0 +1,8 @@
+# All weights use Flickr30k training/validation only; no COCO training.
+training_runs:
+  0: 2026-11-05_icde-reselect-002/seed0
+  1: 2026-11-05_icde-reselect-002/seed1
+  42: 2026-11-05_icde-reselect-001/seed42
+# Reuse the old candidate grid up to its old 99% operating point plus one step.
+# This bounds this first checkpoint-selection check before seeing new results.
+grid: old_99_plus_one

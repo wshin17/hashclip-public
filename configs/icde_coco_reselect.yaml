@@ -1,0 +1,8 @@
+# D-009: COCO Karpathy train + restval, COCO val selects both checkpoints.
+# Architecture, loss, optimizer, 15 epochs and original precision unchanged.
+training_runs:
+  0: 2026-11-06_coco-train-001/seed0
+  1: 2026-11-06_coco-train-001/seed1
+  42: 2026-11-06_coco-train-001/seed42
+training_domain: coco
+large_gallery_contains_training_images: true

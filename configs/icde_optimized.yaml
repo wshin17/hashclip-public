@@ -1,0 +1,7 @@
+# Selected on the two existing validation datasets, with original seed 42.
+# M/nlist/nprobe stay at the earlier validation-selected operating points.
+# Implementation overrides; remeasure_cpu/retrained_cpu inherit data and threads.
+binary_use_heap: false
+rerank_block: 256
+rerank_mode: indexed
+compare_legacy_binary: true

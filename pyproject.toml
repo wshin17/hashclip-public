@@ -1,0 +1,83 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hashclip"
+version = "0.1.0"
+description = "Cross-Modal Binary Hashing with Asymmetric Re-ranking on top of a frozen SigLIP backbone."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "HashCLIP Authors" }]
+keywords = ["image-text retrieval", "binary hashing", "SigLIP", "CLIP", "asymmetric search"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# Runtime deps are pinned in requirements.txt for reproducibility.
+# The pyproject only lists looser bounds so `pip install -e .` works.
+dependencies = [
+    "numpy>=1.26,<2.0",
+    "pandas>=2.2",
+    "pyarrow>=17",
+    "pillow>=10",
+    "tqdm>=4.65",
+    "pyyaml>=6.0",
+    "scikit-learn>=1.5",
+    "matplotlib>=3.9",
+    "seaborn>=0.13",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.3.3"]
+evaluation = [
+    "numpy==1.26.4",
+    "faiss-cpu==1.9.0",
+    "torch==2.7.0",
+    "threadpoolctl==3.6.0",
+    "psutil==7.0.0",
+]
+encoding = [
+    "torch==2.6.0",
+    "torchvision==0.21.0",
+    "open_clip_torch==2.32.0",
+    "timm==1.0.15",
+    "transformers==4.46.0",
+    "huggingface_hub==0.26.0",
+    "sentencepiece==0.2.0",
+    "pillow==10.4.0",
+]
+
+[tool.uv]
+conflicts = [[{ extra = "evaluation" }, { extra = "encoding" }]]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu", extra = "evaluation" },
+    { index = "pytorch-cu124", extra = "encoding" },
+]
+torchvision = { index = "pytorch-cu124", extra = "encoding" }
+
+[project.scripts]
+hashclip = "hashclip.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"

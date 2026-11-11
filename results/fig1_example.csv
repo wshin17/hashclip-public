@@ -1,0 +1,11 @@
+field,value,source
+seed,0,runs/2026-11-06_coco-domain-quality-001/coco_large/config.json checkpoints[0]
+checkpoint,runs/2026-11-06_coco-train-001/seed0/checkpoints/hashclip_b128_seed0_reselect.numpy.npz,runs/2026-11-06_coco-domain-quality-001/coco_large/config.json
+gallery size,323124,data/features/coco-large/galleries/318124/backbone_test.npz
+"M_r (95% validation target, this seed)",3104,"runs/2026-11-06_coco-domain-quality-001/coco_large/selected.json [""t2i/hashclip/0""][""0.95""]"
+"M' = min(M_r, N)",3104,computed
+share of gallery scored by HashCLIP (%),0.9606,M' / N
+"query index (0-based, test captions)",579,first candidate unless --query-id is given
+query text,A man sleeping in a bed with two cats.,"data/features/coco/backbone_test.npz [""captions""]"
+reranked top-10 equals exact top-10,True,recomputed: shortlist of M_r reranked with the paper's IndexedReranker
+recomputed Hamming ranks equal stored ranks (exact top-10),True,runs/2026-11-06_coco-domain-quality-001/coco_large/test_t2i_hashclip_seed0_positions.npy

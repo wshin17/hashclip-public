@@ -1,0 +1,10 @@
+# environments
+.venv/
+.venv-gpu/
+__pycache__/
+*.egg-info/
+
+# datasets, embeddings, checkpoints and run outputs
+data/
+runs/
+outputs/

@@ -1,0 +1,58 @@
+# D-008: common resident-CPU comparison, validation selection and fixed test.
+bits: 128
+seeds: [0, 1, 42]
+batch_sizes: [1, 32]
+threads: 1
+cpus: [0, 2, 4, 6, 8, 10, 12, 14]
+blas_core: Haswell
+warmup: 5
+repeats: 3
+timing_queries: 256
+quality_targets: [0.95, 0.99]
+report_task_recall: false
+adapter_backend: numpy
+binary_use_heap: false
+rerank_mode: indexed
+rerank_block: 256
+retain_gallery_encoder: true
+insertion_count: 32
+ivf_seed: 42
+# Keep the previous IVF grid's intermediate values, extending large galleries.
+ivf_nlist: [32, 64, 128, 256, 512, 640, 768, 1024, 2048, 3072, 4096, 8192]
+ivf_nprobe: [1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256, 384, 512, 640, 768, 1024, 1536, 2048, 3072, 4096, 8192]
+hnsw_m: [16, 32, 64]
+hnsw_ef_construction: [100, 200]
+hnsw_ef_search: [16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
+# Standard 16-byte residual PQ ADC plus the same continuous scorer.
+pq_m: 16
+pq_bits: 8
+ivfpq_nlist: [32, 128, 512, 2048, 8192]
+ivfpq_nprobe: [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 8192]
+ivfpq_candidates: [10, 32, 100, 320, 1000, 3200, 10000]
+datasets:
+  coco:
+    queries: data/features/coco
+    gallery: data/features/coco
+    references: runs/2026-11-04_icde-coco-001/results
+    train: data/features/coco-large/backbone_train.npz
+  flickr_large:
+    queries: data/features
+    gallery: data/features/icde_scale/29000
+    references: runs/2026-11-04_icde-scale-003/results/29000
+    train: data/features/backbone_train.npz
+  coco_large:
+    queries: data/features/coco
+    gallery: data/features/coco-large/galleries/318124
+    references: runs/2026-11-05_coco-large-quality-001/references
+    train: data/features/coco-large/backbone_train.npz
+    allow_unlabeled_gallery: true
+    # D-009: keep every IVF-Flat/HNSW point. Only shrink IVF-PQ's search grid.
+    # Quality-only independent CPU searches are concurrent; timed calls stay 1 thread.
+    execution:
+      quality_workers: 8
+      record_load: true
+      ivfpq_nlist: [512, 2048, 8192]
+      ivfpq_nprobe: [8, 32, 128, 512, 2048, 8192]
+      ivfpq_candidates: [10, 100, 1000, 3200, 10000]
+      diagnostic_source: runs/2026-11-05_icde-systems-001/coco
+      wait_training_result: runs/2026-11-06_coco-train-001/seed42/result.json

@@ -1,0 +1,5 @@
+dataset,direction,seeds,trials_per_seed,gallery_size,delete_p50_ms_mean,delete_p95_ms_mean,scope
+flickr_large,i2t,3,100,150000,0.27478833333333336,0.3805397333333333,binary code index only; fresh full index per trial; no embedding deletion
+flickr_large,t2i,3,100,30000,0.055280333333333334,0.07656846666666667,binary code index only; fresh full index per trial; no embedding deletion
+coco_large,i2t,3,100,591757,1.033213,1.3962246,binary code index only; fresh full index per trial; no embedding deletion
+coco_large,t2i,3,100,323124,0.5843201666666666,0.8483143166666667,binary code index only; fresh full index per trial; no embedding deletion

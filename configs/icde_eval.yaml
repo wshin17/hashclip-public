@@ -1,0 +1,16 @@
+# First-round CPU evaluation. Model and checkpoint selection are unchanged.
+bits: 128
+seeds: [0, 1, 42]
+batch_sizes: [1, 32]
+candidate_budgets: [10, 25, 50, 100, 200, 500, 1000, 2000, 5000]
+ivf_nlist: [8, 16, 32, 64]
+ivf_nprobe: [1, 2, 4, 8, 16, 32, 64]
+ivf_seed: 42
+quality_targets: [0.95, 0.99]  # Mean top-10 overlap, not complete recovery.
+threads: 1
+cpus: [0, 2, 4, 6, 8, 10, 12, 14]
+blas_core: Haswell  # 14900K supports AVX2; avoid old OpenBLAS Prescott fallback.
+warmup: 5
+repeats: 3
+timing_queries: 256
+expected_images: {val: 1014, test: 1000}
