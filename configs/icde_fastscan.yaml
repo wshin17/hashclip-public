@@ -1,9 +1,8 @@
-# D-012 / 009: PQ32x4 FastScan, native candidates, no rotation.
+# PQ32x4 FastScan, native candidates, no rotation.
 method: fastscan
 source_systems: runs/2026-11-05_icde-systems-001
 final_systems: runs/2026-11-07_icde-final-priority-001/results
 output: runs/2026-11-09_fastscan-001
-deadline: '2026-11-10T18:00:00+08:00'
 datasets:
   flickr_large:
     models: runs/2026-11-09_fastscan-001/models/flickr

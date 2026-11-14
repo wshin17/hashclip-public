@@ -21,7 +21,7 @@ def train_representation(method, train, seed=42, bits=128):
     x = prepare_vectors(train)
     d = x.shape[1]
     if bits != 128:
-        raise ValueError("D-008 representation comparison fixes the code at 128 bits")
+        raise ValueError("The representation comparison fixes the code at 128 bits")
     if method == "itq":
         transform = faiss.ITQTransform(d, bits, True)
         transform.itq.seed = int(seed)
@@ -172,7 +172,7 @@ class FastScanRerank:
         if not trained_index.is_trained or trained_index.ntotal:
             raise ValueError('Expected a trained empty FastScan template')
         if (pq.M, pq.nbits, pq.code_size) != (32,4,16):
-            raise ValueError('D-012 requires PQ32x4 and 16 bytes per item')
+            raise ValueError('FastScan requires PQ32x4 and 16 bytes per item')
         self.gallery = prepare_vectors(gallery)
         self.index = faiss.clone_index(trained_index)
         prepared = time.perf_counter()

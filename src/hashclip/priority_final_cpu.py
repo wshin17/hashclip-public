@@ -1,4 +1,4 @@
-"""PI-ordered final timing: same-domain targets, all targets, bounded curves.
+"""Final timing: same-domain targets, all targets, bounded curves.
 
 Existing final measurements are preserved. Parameters come only from validation;
 each new worker uses the original query timer, build/insertion and fresh RSS.

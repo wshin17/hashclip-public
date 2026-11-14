@@ -1,8 +1,7 @@
-# D-011: reuse fitted OPQ models; same final CPU query settings and fixed targets.
+# Reuse fitted OPQ models; same final CPU query settings and fixed targets.
 source_systems: runs/2026-11-05_icde-systems-001
 final_systems: runs/2026-11-07_icde-final-priority-001/results
 output: runs/2026-11-08_opq-timing-001
-deadline: '2026-11-10T23:59:59+08:00'
 fit_host: fitting-server
 datasets:
   flickr_large:

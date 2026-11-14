@@ -1,4 +1,4 @@
-"""Full-query candidate curves and validation-selected M for D-008.
+"""Full-query candidate curves and validation-selected M.
 
 This is a quality-only job, not a latency benchmark. All methods scan every
 gallery code. Query batch is 32. Continuous refinement uses the shared scorer;

@@ -1,4 +1,4 @@
-"""D-013: remote OPQ32x4 fitting and a serial, resumable post-009 queue."""
+"""OPQ32x4 FastScan: model fitting and a serial, resumable timing queue."""
 from __future__ import annotations
 
 import argparse
@@ -22,9 +22,11 @@ from .systems_cpu import BUILD_KEYS, POINT_KEYS, execute, report_selected, resol
 
 
 def deadline(config):
+    if not config.get('deadline'):
+        return None
     value = datetime.fromisoformat(config['deadline']).timestamp()
     if time.time() >= value:
-        raise TimeoutError('D-013 hard deadline reached; preserve completed groups')
+        raise TimeoutError('Deadline reached; completed groups kept')
     return value
 
 
@@ -193,11 +195,11 @@ def run_dataset(name, options, config, *, enforce_quiet=True):
     if cfg != {**meta['config'],'record_load':True,'quality_workers':8}:
         raise ValueError('Timing settings differ from the final round')
     if cfg['threads']!=1 or cfg['batch_sizes']!=[1,32]:
-        raise ValueError('D-013 fixes CPU threads=1 and batches=1/32')
+        raise ValueError('Expected one CPU thread and batches 1/32')
     models = resolve_path(options['models'])
     manifest = read_json(models/'manifest.json')
     if any(manifest['training_features'][k]!=options['training_identity'][k] for k in ('bytes','sha256')):
-        raise ValueError('Training cache differs from 009')
+        raise ValueError('Training cache differs from the FastScan run')
     trained, identities = {}, []
     for row in manifest['models']:
         if row['method']!='opq_fastscan':
@@ -213,7 +215,7 @@ def run_dataset(name, options, config, *, enforce_quiet=True):
         if str(path.resolve()) not in checked:
             check_identity(path,item)
             checked.add(str(path.resolve()))
-    identity = {'task':'010','method':'opq_fastscan','dataset':name,'config':cfg,
+    identity = {'method':'opq_fastscan','dataset':name,'config':cfg,
         'source':input_identity(source/'config.json'),'final_source':input_identity(final/'config.json'),
         'models_manifest':input_identity(models/'manifest.json'),'models':identities,
         'fit_host':manifest['host'],'fit_threads':manifest['threads'],
@@ -369,14 +371,15 @@ def main():
     output = resolve_path(config['output'])
     output.mkdir(parents=True,exist_ok=True)
     def stop_at_deadline(signum, frame):
-        raise TimeoutError('D-013 hard deadline reached')
+        raise TimeoutError('Deadline reached')
     signal.signal(signal.SIGALRM,stop_at_deadline)
-    signal.setitimer(signal.ITIMER_REAL,max(.001,datetime.fromisoformat(config['deadline']).timestamp()-time.time()))
+    if config.get('deadline'):
+        signal.setitimer(signal.ITIMER_REAL,max(.001,datetime.fromisoformat(config['deadline']).timestamp()-time.time()))
     try:
         pending = pending_dependencies(config)
         while pending:
             deadline(config)
-            print('Waiting for 009 completion',pending,flush=True)
+            print('Waiting for FastScan run',pending,flush=True)
             time.sleep(30)
             pending = pending_dependencies(config)
         results = []

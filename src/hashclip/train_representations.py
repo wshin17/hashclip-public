@@ -1,4 +1,4 @@
-"""Fit D-008 full-scan baselines only on the training gallery modality."""
+"""Fit full-scan baselines only on the training gallery modality."""
 
 from __future__ import annotations
 

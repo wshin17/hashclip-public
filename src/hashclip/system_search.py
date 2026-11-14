@@ -1,4 +1,4 @@
-"""D-008 CPU ANN comparators and incremental insertion measurements."""
+"""CPU ANN comparators and incremental insertion measurements."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-# D-008: same validation-selected search implementation, torch-free adapter.
+# Same validation-selected search implementation, torch-free adapter.
 binary_use_heap: false
 rerank_block: 256
 rerank_mode: indexed

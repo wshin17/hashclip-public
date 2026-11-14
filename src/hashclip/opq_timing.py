@@ -1,4 +1,4 @@
-"""D-011: fixed OPQ operating points, full-query quality, timing and RSS."""
+"""Fixed OPQ operating points, full-query quality, timing and RSS."""
 from __future__ import annotations
 
 import argparse
@@ -74,7 +74,7 @@ def run_dataset(name, options, config, output, *, enforce_quiet=True):
     if cfg != {**meta['config'],'record_load':True,'quality_workers':8}:
         raise ValueError('OPQ and final timing settings differ')
     if cfg['threads'] != 1 or cfg['batch_sizes'] != [1,32]:
-        raise ValueError('D-011 uses one CPU thread and batches 1/32')
+        raise ValueError('Expected one CPU thread and batches 1/32')
     models = resolve_path(options['models'])
     if method == 'opq':
         representation = read_json(resolve_path(options['representation_source']))
@@ -98,7 +98,7 @@ def run_dataset(name, options, config, output, *, enforce_quiet=True):
         if str(path.resolve()) not in checked:
             check_identity(path,item)
             checked.add(str(path.resolve()))
-    identity = {'task':'008' if method=='opq' else '009','method':method,'dataset':name,'source':input_identity(source/'config.json'),
+    identity = {'method':method,'dataset':name,'source':input_identity(source/'config.json'),
                 'final_source':input_identity(final_source/'config.json'),'config':cfg,
                 'models_manifest':models_identity,'models':model_identities,
                 'fit_host':model_manifest.get('host',config.get('fit_host')),
@@ -118,7 +118,7 @@ def run_dataset(name, options, config, output, *, enforce_quiet=True):
         save_json(output/'config.json',identity)
 
     def before_worker():
-        if time.time() >= datetime.fromisoformat(config['deadline']).timestamp():
+        if config.get('deadline') and time.time() >= datetime.fromisoformat(config['deadline']).timestamp():
             raise TimeoutError('Execution deadline reached; preserve completed work')
         if enforce_quiet:
             quiet()

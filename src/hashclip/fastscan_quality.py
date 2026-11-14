@@ -1,4 +1,4 @@
-"""Validation-only budgets for native quantized FastScan ties (D-012).
+"""Validation-only budgets for native quantized FastScan ties.
 
 Native top-M sets need not be nested. Bound each reference neighbor's rank
 by its equal-distance interval, then test every ambiguous integer M in order.
@@ -70,7 +70,7 @@ def online_quality(index, queries, reference, budgets, batches=(1, 32)):
     native M candidates. Batches are paired in memory, not hashed or stored.
     """
     if tuple(batches) != (1, 32):
-        raise ValueError('D-012 compares batch 1 and 32')
+        raise ValueError('Expected batch sizes 1 and 32')
     n = index.index.ntotal
     flags = np.zeros(n, dtype=bool)
     records = {}

@@ -1,4 +1,4 @@
-"""D-009: retime validation frontiers, freeze test curves and selected RSS.
+"""Retime validation frontiers, freeze test curves and selected RSS.
 
 Baseline quality comes from the completed, identical validation grid. Binary
 curves include the original fractional M grid and validation target budgets.

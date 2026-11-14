@@ -1,4 +1,4 @@
-"""Official COCO archives for the D-008 larger-gallery evaluation.
+"""Official COCO archives for the larger-gallery evaluation.
 
 Only the 2014 train/val, 2015 test and 2017 unlabeled images are included.
 2017 train/val reuse the 2014 images and are deliberately not downloaded.

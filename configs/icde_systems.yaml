@@ -1,4 +1,4 @@
-# D-008: common resident-CPU comparison, validation selection and fixed test.
+# Common resident-CPU comparison, validation selection and fixed test.
 bits: 128
 seeds: [0, 1, 42]
 batch_sizes: [1, 32]
@@ -46,7 +46,7 @@ datasets:
     references: runs/2026-11-05_coco-large-quality-001/references
     train: data/features/coco-large/backbone_train.npz
     allow_unlabeled_gallery: true
-    # D-009: keep every IVF-Flat/HNSW point. Only shrink IVF-PQ's search grid.
+    # Keep every IVF-Flat/HNSW point. Only shrink IVF-PQ's search grid.
     # Quality-only independent CPU searches are concurrent; timed calls stay 1 thread.
     execution:
       quality_workers: 8

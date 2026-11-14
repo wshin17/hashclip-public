@@ -1,4 +1,4 @@
-"""D-012 low-priority single-code deletion after both higher priorities finish."""
+"""Single-code deletion timing, run after the FastScan and breakeven jobs."""
 from collections import defaultdict
 from datetime import datetime
 import json
@@ -31,8 +31,8 @@ def run(config):
         for (direction,seed),template in sorted(templates.items()):
             if (dataset,direction,seed) in keys:
                 continue
-            if time.time()+60 >= datetime.fromisoformat(config['deadline']).timestamp():
-                save_json(output/'incomplete.json',{'reason':'D-012 deadline; low-priority deletion incomplete','groups':len(done)})
+            if config.get('deadline') and time.time()+60 >= datetime.fromisoformat(config['deadline']).timestamp():
+                save_json(output/'incomplete.json',{'reason':'deadline reached; deletion incomplete','groups':len(done)})
                 return
             quiet()
             print('Single-code deletion',dataset,direction,seed,flush=True)

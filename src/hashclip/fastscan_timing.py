@@ -1,4 +1,4 @@
-"""D-012 sequential fitting, native FastScan evaluation and same-domain anchors."""
+"""Sequential fitting, native FastScan evaluation and same-domain anchors."""
 from __future__ import annotations
 
 import argparse
@@ -26,8 +26,8 @@ def fit_models(config):
                 for row in manifest['models']:
                     check_identity(output/Path(row['artifact']['path']).name,row['artifact'])
                 continue
-        if time.time() >= datetime.fromisoformat(config['deadline']).timestamp():
-            raise TimeoutError('D-012 deadline reached; preserve partial results')
+        if config.get('deadline') and time.time() >= datetime.fromisoformat(config['deadline']).timestamp():
+            raise TimeoutError('Deadline reached; partial results kept')
         command = ['taskset','-c','16-31',sys.executable,'-m','hashclip.train_representations',
                    '--features',str(features),'--output',str(output),'--threads','8',
                    '--methods','fastscan','--seeds','0','1','42','--resume']

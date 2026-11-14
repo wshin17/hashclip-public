@@ -1,4 +1,4 @@
-"""Validation-selected CPU systems comparison for D-008.
+"""Validation-selected CPU systems comparison.
 
 Uses the existing complete-query timer and canonical reference neighbors.
 Memory runs are fresh processes without reference/quality allocations.
@@ -265,7 +265,7 @@ def worker(spec):
             if spec['method'] in ('fastscan','opq_fastscan'):
                 build_details.update({'fastscan_'+k:v for k,v in index.search_settings.items()})
             if spec['method'] == 'opq_fastscan':
-                # D-013: report only rotation/encoding/code writes as build;
+                # Report only rotation/encoding/code writes as build;
                 # normalization, template I/O and refinement preparation stay explicit.
                 build_details['local_initialization_ms'] = build_ms
                 build_ms = index.build_stages_ms['gallery_encode_write_ms']
@@ -285,7 +285,7 @@ def worker(spec):
                     "numeric_buffers": index.storage, "torch_loaded": "torch" in sys.modules}
         if spec.get('mode') == 'delete':
             if spec['method'] not in ('hashclip','hashclip_coco'):
-                raise ValueError('D-012 deletion is limited to the HashCLIP code index')
+                raise ValueError('Deletion is limited to the HashCLIP code index')
             from .cpu_load import snapshot, difference
             before = snapshot()
             deleted = binary_deletions(index.index)
@@ -455,7 +455,7 @@ def report_selected(selected, rows):
 
 def execute(spec, log):
     timeout = None
-    if 'execution_deadline' in spec:
+    if spec.get('execution_deadline'):
         timeout = spec['execution_deadline'] - time.time()
         if timeout <= 0:
             raise TimeoutError('Execution deadline reached before worker')

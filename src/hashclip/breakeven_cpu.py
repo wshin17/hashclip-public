@@ -1,4 +1,4 @@
-"""D-012 validation-selected minimum total cost and fixed test supplements.
+"""Validation-selected minimum total cost and fixed test supplements.
 
 Keep early cheap-build/slower-query configurations: the strict lower envelope
 can beat HashCLIP at Q=0, then lose, then win again. Report both endpoints of
@@ -72,8 +72,8 @@ def make_plan(config, output):
     """Only validation numbers choose configurations; test values are not read."""
     if (output/'plan.json').exists():
         plan = read_json(output/'plan.json')
-        if not plan.get('pi_confirmation') or any(g['basis']!='reusable' for g in plan['groups']):
-            raise ValueError('Superseded cost plan; preserve it and apply PI 2026-11-09 correction')
+        if not plan.get('cost_interval') or any(g['basis']!='reusable' for g in plan['groups']):
+            raise ValueError('Outdated cost plan; remove plan.json and rerun')
         return plan
     train = training_records()
     groups, sources, grids = [], [], []
@@ -85,7 +85,7 @@ def make_plan(config, output):
             sources.append(input_identity(file))
             validation.update({point_key(r):r for r in load_rows(file,tag)})
         selection_file = final/dataset/'selected.json'
-        # D-010 stores frozen target choices in its configuration snapshot.
+        # The final run stores frozen target choices in its configuration snapshot.
         meta = read_json(final/dataset/'config.json')
         selected = meta['selected'] if 'selected' in meta else None
         if selected is None:
@@ -131,10 +131,9 @@ def make_plan(config, output):
                                   'build_ms':r['build_ms'],'batch_p50_ms':r['batch_p50_ms'],
                                   'validation_recall_at_10':r['final_recall_at_10'],
                                   'source':r['source'],'source_round':r['source_round']} for r in eligible)
-    manuscript_path = ROOT/'.worktrees/2026-11-07_007_paper/ICDE27/main.tex'
-    plan = {'task':'009','pi_confirmation':'2026-11-09; reusable-model interval only; both endpoints frozen on validation',
+    plan = {'cost_interval':'reusable-model interval only; both endpoints frozen on validation',
             'created_utc':time.time(),'inputs':sources,'groups':groups,
-            'adapter_training':train,'manuscript':input_identity(manuscript_path),
+            'adapter_training':train,
             'selection_policy':'validation-qualified full grids; final validation retiming overrides identical points; test never chooses parameters',
             'first_deployment_policy':'report GPU training and multithread CPU fitting with hardware separately; no time/resource conversion and no first-deployment interval',
             'offline_policy':'full adapter training trajectory recorded; cached backbone features; excludes encoder extraction and model-selection validation'}
@@ -167,8 +166,8 @@ def supplement(config, plan, output, enforce_quiet=True):
         paths = read_json(source/'config.json')['dataset_paths']
         rows = read_rows(folder/'test.csv') if (folder/'test.csv').exists() else []
         for group in selected_groups(missing):
-            if time.time() >= datetime.fromisoformat(config['deadline']).timestamp():
-                raise TimeoutError('D-012 deadline reached')
+            if config.get('deadline') and time.time() >= datetime.fromisoformat(config['deadline']).timestamp():
+                raise TimeoutError('Deadline reached')
             if enforce_quiet:
                 quiet()
             template = templates[tuple(group.get(k) for k in BUILD_KEYS)]
@@ -258,7 +257,7 @@ def report(config, plan, output):
                             'threads':meta['threads'],'cost_type':'CPU fitting elapsed seconds; not CPU-thread seconds',
                             'source':str(manifest)} for r in meta['models'] if r['method']==method)
     write_csv(output/'offline_costs.csv',offline)
-    save_json(output/'complete.json',{'task':'009','groups':len(results),'completed_utc':time.time()})
+    save_json(output/'complete.json',{'groups':len(results),'completed_utc':time.time()})
     archive = ROOT/'outputs/tables/icde_systems/breakeven'
     archive.mkdir(parents=True,exist_ok=True)
     for name in ('plan.json','validation_costs.csv','breakeven.csv','selected_test.csv',
@@ -287,8 +286,8 @@ def main():
         return
     if args.wait_fastscan:
         while not (root/'fastscan_complete.json').exists():
-            if time.time() >= datetime.fromisoformat(config['deadline']).timestamp():
-                raise TimeoutError('D-012 deadline reached while waiting for priority 1')
+            if config.get('deadline') and time.time() >= datetime.fromisoformat(config['deadline']).timestamp():
+                raise TimeoutError('Deadline reached while waiting for FastScan timing')
             time.sleep(30)
     supplement(config,plan,output)
     report(config,plan,output)
